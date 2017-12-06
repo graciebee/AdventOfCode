@@ -27,7 +27,7 @@ function partOne(input) {
 function partTwo(input) {
     let inputArray = input.split(`\t`).map(num => parseInt(num, 10));
     let pastArrangements = [];
-    
+    let matchingArrangment = null;
     do {
       pastArrangements.push(inputArray.slice());
       let value = Math.max(...inputArray);
@@ -46,7 +46,8 @@ function partTwo(input) {
           }
           value--;
       }
-    } while (!pastArrangements.find(arrangement => arrangement.toString() == inputArray.toString()));
-    const difference = pastArrangements.indexOf(pastArrangements.find(arrangement => arrangement.toString() == inputArray.toString()));
+      matchingArrangment = pastArrangements.find(arrangement => arrangement.toString() == inputArray.toString());
+    } while (!matchingArrangment);
+    const difference = pastArrangements.indexOf(matchingArrangment);
     return pastArrangements.length-difference;
 }
