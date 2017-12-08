@@ -5,7 +5,7 @@ class Program {
         this.weight = parseInt(stringArray[1].replace(/\(|\)/g,''), 10);
         this.children = [];
         if (stringArray[2] && stringArray[2] == '->') {
-        this.children = stringArray.slice(3).map(string => string.replace(/,/g, ''));
+            this.children = stringArray.slice(3).map(string => string.replace(/,/g, ''));
         }
     }
 }
