@@ -33,7 +33,7 @@ class ProgramNode {
   
     areChildrenBalanced() {
         if (!this.children.length) return true;
-        return this.getChildrenWeight() % this.children[0].getWeight() == 0;
+        return !this.children.some(child => this.children[0].getWeight() != child.getWeight());
     }
 
     getWeight() {
