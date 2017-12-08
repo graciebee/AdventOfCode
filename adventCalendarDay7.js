@@ -1,61 +1,61 @@
 class Program {
     constructor(stringProgram) {
-    	let stringArray = stringProgram.split(' ');
-     	this.name = stringArray[0];
-      	this.weight = parseInt(stringArray[1].replace(/\(|\)/g,''), 10);
-      	this.children = [];
-      	if (stringArray[2] && stringArray[2] == '->') {
-        	this.children = stringArray.slice(3).map(string => string.replace(/,/g, ''));
+        let stringArray = stringProgram.split(' ');
+        this.name = stringArray[0];
+        this.weight = parseInt(stringArray[1].replace(/\(|\)/g,''), 10);
+        this.children = [];
+        if (stringArray[2] && stringArray[2] == '->') {
+        this.children = stringArray.slice(3).map(string => string.replace(/,/g, ''));
         }
     }
 }
 
 class ProgramTree {
     constructor(root, allPrograms) {
-    	this.root = new ProgramNode(root, allPrograms);
+        this.root = new ProgramNode(root, allPrograms);
     }
 }
 
 class ProgramNode {
     constructor(program, allPrograms) {
-    	this.name = program.name;
-      	this.weight = program.weight;
-		this.addChildren(program.children, allPrograms);
+        this.name = program.name;
+        this.weight = program.weight;
+        this.addChildren(program.children, allPrograms);
     }
 
     addChildren(children, allPrograms) {
-  		if (!children.length) {
-        	this.children = [];
-          	return;
+        if (!children.length) {
+            this.children = [];
+            return;
         }
-    	this.children = children.map(child => new ProgramNode(allPrograms.find(program => program.name == child), allPrograms));
+        this.children = children.map(child => new ProgramNode(allPrograms.find(program => program.name == child), allPrograms));
     }
   
     areChildrenBalanced() {
-    	if (!this.children.length) return true;
-      	return this.getChildrenWeight() % this.children[0].getWeight() == 0;
+        if (!this.children.length) return true;
+        return this.getChildrenWeight() % this.children[0].getWeight() == 0;
     }
 
     getWeight() {
-      	return this.children.length
-          ? this.weight + this.getChildrenWeight()
-      	  : this.weight;
+        return this.children.length
+            ? this.weight + this.getChildrenWeight()
+            : this.weight;
     }
 
     getChildrenWeight() {
-    	return this.children.map(child => child.getWeight()).reduce((a, b) => a + b);
+        return this.children.map(child => child.getWeight()).reduce((a, b) => a + b);
     }
 	
     getUnbalancedChildNeededWeight() {
-      	if (this.children.some(child => !child.areChildrenBalanced())) {
-          	const unbalancedParent = this.children.find(child => !child.areChildrenBalanced());
-          	return unbalancedParent.getUnbalancedChildNeededWeight();
+        if (this.children.some(child => !child.areChildrenBalanced())) {
+            const unbalancedParent = this.children.find(child => !child.areChildrenBalanced());
+            return unbalancedParent.getUnbalancedChildNeededWeight();
         } else {
-          	const sortedChildren = this.children.sort((a, b) => {
-            	const averageWeight = this.getChildrenWeight() / this.children.length;
-              	return Math.abs(averageWeight - a.getWeight()) < Math.abs(averageWeight - b.getWeight()) ? 1 : -1;
+            const sortedChildren = this.children.sort((a, b) => {
+                const averageWeight = this.getChildrenWeight() / this.children.length;
+                return Math.abs(averageWeight - a.getWeight()) < Math.abs(averageWeight - b.getWeight()) ? 1 : -1;
             });
-          	return sortedChildren[1].getWeight() - sortedChildren[0].getWeight() + sortedChildren[0].weight;
+            return sortedChildren[1].getWeight() - sortedChildren[0].getWeight() + sortedChildren[0].weight;
         }
     }
 }
