@@ -1,5 +1,5 @@
 class Program {
-	constructor(stringProgram) {
+    constructor(stringProgram) {
     	let stringArray = stringProgram.split(' ');
      	this.name = stringArray[0];
       	this.weight = parseInt(stringArray[1].replace(/\(|\)/g,''), 10);
@@ -11,19 +11,19 @@ class Program {
 }
 
 class ProgramTree {
-	constructor(root, allPrograms) {
+    constructor(root, allPrograms) {
     	this.root = new ProgramNode(root, allPrograms);
     }
 }
 
 class ProgramNode {
-	constructor(program, allPrograms) {
+    constructor(program, allPrograms) {
     	this.name = program.name;
       	this.weight = program.weight;
 		this.addChildren(program.children, allPrograms);
     }
 
-	addChildren(children, allPrograms) {
+    addChildren(children, allPrograms) {
   		if (!children.length) {
         	this.children = [];
           	return;
@@ -31,22 +31,22 @@ class ProgramNode {
     	this.children = children.map(child => new ProgramNode(allPrograms.find(program => program.name == child), allPrograms));
     }
   
-  	areChildrenBalanced() {
+    areChildrenBalanced() {
     	if (!this.children.length) return true;
       	return this.getChildrenWeight() % this.children[0].getWeight() == 0;
     }
 
-  	getWeight() {
+    getWeight() {
       	return this.children.length
           ? this.weight + this.getChildrenWeight()
       	  : this.weight;
     }
 
-  	getChildrenWeight() {
+    getChildrenWeight() {
     	return this.children.map(child => child.getWeight()).reduce((a, b) => a + b);
     }
 	
-  	getUnbalancedChildNeededWeight() {
+    getUnbalancedChildNeededWeight() {
       	if (this.children.some(child => !child.areChildrenBalanced())) {
           	const unbalancedParent = this.children.find(child => !child.areChildrenBalanced());
           	return unbalancedParent.getUnbalancedChildNeededWeight();
@@ -61,22 +61,22 @@ class ProgramNode {
 }
 
 function partOne(input) {
-	const programArray = input.split(`\n`).map(stringProgram => new Program(stringProgram));
-  	const programChildren = [];
-  	programArray.forEach(program => {
-      programChildren.push(...program.children);
+    const programArray = input.split(`\n`).map(stringProgram => new Program(stringProgram));
+    const programChildren = [];
+    programArray.forEach(program => {
+        programChildren.push(...program.children);
     });
     const rootProgram = programArray.find(program => !programChildren.some(child => child == program.name));
-	return rootProgram.name;
+    return rootProgram.name;
 }
 
 function partTwo(input) {
-	const programArray = input.split(`\n`).map(stringProgram => new Program(stringProgram));
-  	const programChildren = [];
-  	programArray.forEach(program => {
-      programChildren.push(...program.children);
+    const programArray = input.split(`\n`).map(stringProgram => new Program(stringProgram));
+    const programChildren = [];
+    programArray.forEach(program => {
+        programChildren.push(...program.children);
     });
     const rootProgram = programArray.find(program => !programChildren.some(child => child == program.name));
-  	const programTree = new ProgramTree(rootProgram, programArray);
- 	return programTree.root.getUnbalancedChildNeededWeight();
+    const programTree = new ProgramTree(rootProgram, programArray);
+    return programTree.root.getUnbalancedChildNeededWeight();
 }
